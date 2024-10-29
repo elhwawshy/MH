@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="envelope-wrapper">
+      <div class="envelope">
+        <div class="letter">
+          <div class="text">
+            <strong> My dear daughter </strong>
+            <p>
+              You have been away from me long enough, and you still choose distance as if it were easier than closeness.
+              This is how you thank your father.... All I have to say is that if the world does not contain you as much
+              as they are, then my heart welcomes you and I will continue to wait for you. Do not procrastinate in being
+              far from your father, for he is dying of longing for you, little one.
+            </p>
+            <strong>Your dear , father</strong>
+          </div>
+        </div>
+      </div>
+      <div class="heart"></div>
+    </div>
+  </div>
+
+  <div class="mu" style="display: none;">
+    <video id="myVideo" loop width="200px" height="200px">
+      <source src="صوت رنة المفتاح في الباب ساعة لما توصل 🗝🥰🤗_بنت ابويا ويا بختي عمري معاك عشتوا 😌😍_بيقولولي اني شبهك 🌍😍(.mp4"
+        type="video/mp4">
+    </video>
+  </div>
+
+  <script>
+    const envelope = document.querySelector('.envelope-wrapper');
+    const video = document.getElementById('myVideo');
+
+    envelope.addEventListener('click', () => {
+      envelope.classList.toggle('flap');
+      // تشغيل الفيديو عند فتح الظرف
+      if (envelope.classList.contains('flap')) {
+        video.play();
+      } else {
+        video.pause();
+        video.currentTime = 0; // إعادة الفيديو للبداية عند غلق الظرف
+      }
+    });
+  </script>
+</body>
+
+</html>
