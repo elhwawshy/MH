@@ -1,12 +1,12 @@
 :root {
-    --primary: #ffffff;
-    --bg-color: #fda6c1;
-    --bg-envelope-color: #f65d5d;
+    --primary: #a8b8b9;
+    --bg-color: #293751;
+    --bg-envelope-color: #293751;
     --envelope-tab: #edd3b0;
     --envelope-cover: #FDA580;
     --shadow-color: rgba(0, 0, 0, 0.2);
     --txt-color: #000000;
-    --heart-color: rgb(255 0 0);
+    --heart-color: #293751;
   }
 
   body {
@@ -128,3 +128,4 @@
     transform: rotate(90deg);
     transition-delay: 0.4s;
   }
+
