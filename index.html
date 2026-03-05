@@ -1,48 +1,214 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-</head>
+  <title>رسالة اعتذار</title>
+  <style>
+    /* استيراد خط عربي مميز */
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
 
+    :root {
+      --primary: #fdfbf7; /* لون ورقة الرسالة */
+      --bg-color: #293751; /* لون الخلفية */
+      --bg-envelope-color: #293751;
+      --envelope-tab: #edd3b0;
+      --envelope-cover: #FDA580;
+      --shadow-color: rgba(0, 0, 0, 0.2);
+      --txt-color: #1a1a1a;
+      --heart-color: #293751; /* تم تغيير لون القلب للأحمر ليكون أوضح */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Cairo', sans-serif; /* تفعيل الخط العربي */
+      overflow: hidden; /* منع الشاشة من التمرير الخارجي */
+    }
+
+    .container {
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .envelope-wrapper {
+      position: relative;
+      background: var(--bg-envelope-color);
+      box-shadow: 0 0 40px var(--shadow-color);
+      cursor: pointer;
+    }
+
+    .envelope {
+      position: relative;
+      width: 320px; /* مقاس مناسب للهواتف */
+      max-width: 90vw; /* حماية من الشاشات الصغيرة جداً */
+      height: 230px;
+    }
+
+    .envelope::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 4; /* غطاء الظرف العلوي */
+      border-top: 130px solid var(--envelope-tab);
+      border-right: 160px solid transparent;
+      border-left: 160px solid transparent;
+      transform-origin: top;
+      transition: all 0.5s ease-in-out 0.7s;
+    }
+
+    .envelope::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 2; /* الغطاء السفلي والجانبي */
+      border-right: 160px solid var(--envelope-cover);
+      border-bottom: 100px solid var(--envelope-cover);
+      border-left: 160px solid var(--envelope-cover);
+      border-top: 130px solid transparent;
+    }
+
+    .letter {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 85%; /* عرض الورقة */
+      height: 90%; /* طول الورقة وهي بالداخل */
+      background: var(--primary);
+      transition: all 1s ease-in-out;
+      box-shadow: 0 0 10px var(--shadow-color);
+      padding: 20px 15px;
+      border-radius: 5px;
+      z-index: 1; /* الورقة خلف الغطاء قبل الفتح */
+      overflow-y: auto; /* إضافة خاصية التمرير إذا كان النص طويلاً */
+      scrollbar-width: none; /* إخفاء شكل شريط التمرير لجمال التصميم */
+    }
+
+    .letter::-webkit-scrollbar {
+      display: none; /* إخفاء شريط التمرير في كروم وسفاري */
+    }
+
+    .letter .text {
+      color: var(--txt-color);
+      font-size: 13px; /* حجم خط مقروء ومناسب */
+      line-height: 1.6;
+      text-align: right;
+    }
+
+    .title {
+      display: block;
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #293751;
+      border-bottom: 2px solid #edd3b0;
+      padding-bottom: 5px;
+    }
+
+    .name {
+      display: block;
+      text-align: center;
+      font-weight: 700;
+      color: #d35400; /* لون مميز للأسماء */
+      margin: 15px 0 5px 0;
+      font-size: 14px;
+    }
+
+    .text p {
+      margin-bottom: 5px;
+    }
+
+    .heart {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      background: var(--heart-color);
+      z-index: 5;
+      transform: translate(-50%, -20%) rotate(45deg);
+      transition: all 0.5s ease-in-out 1s;
+      box-shadow: 0 1px 6px var(--shadow-color);
+    }
+
+    .heart:before,
+    .heart:after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: var(--heart-color);
+      border-radius: 50%;
+    }
+
+    .heart:before { top: -10px; left: 0; }
+    .heart:after { right: 10px; top: 0; }
+
+    /* حركات الأنيميشن عند فتح الظرف (إضافة كلاس flap) */
+    .flap .envelope::before {
+      transform: rotateX(180deg);
+      z-index: 0; /* رجوع الغطاء للخلف */
+    }
+
+    .flap .letter {
+      bottom: 110px; /* خروج الورقة للأعلى */
+      height: 380px; /* تمدد الورقة لإظهار النص */
+      max-height: 70vh; /* منع خروج الورقة خارج الشاشة في الهواتف الصغيرة */
+      width: 95%; /* تمدد العرض قليلاً */
+      z-index: 3; /* ظهور الورقة فوق الغطاء السفلي */
+      transition-delay: 1s; /* انتظار ثانية حتى يُفتح الغطاء */
+    }
+
+    .flap .heart {
+      opacity: 0; /* إخفاء القلب عند الفتح */
+      transition-delay: 0.1s;
+    }
+
+    /* فيديو مخفي ليعمل في الخلفية */
+    .mu {
+      display: none;
+    }
+  </style>
+</head>
 <body>
+
   <div class="container">
     <div class="envelope-wrapper">
       <div class="envelope">
         <div class="letter">
           <div class="text">
-            <strong> My Team</strong>
-            <p>
-سلام عليكم 
-<br>
-أنا حابب أعتذرلكم  بخصوص الموقف اللي حصل وأخص بكلامي في البداية 
-	<br>
-																حنين  
-<br>
-بصفتك التيم ليدر وأخت قبل أي حاجة حبيت أعتذر لك عن الشد اللي حصل وانفعالي بخصوص الشغل أنا بقدر جداً دورك وتعبك في تنظيم التيم والموقف اللي حصل كان نتيجة ضغط وتسرع مش أكتر
-<br>
+            <span class="title">My Team</span>
+            <p style="text-align: center; font-weight: bold;">سلام عليكم..</p>
+            <p>أنا حابب أعتذرلكم بخصوص الموقف اللي حصل وأخص بكلامي في البداية:</p>
+            
+            <span class="name">حنين</span>
+            <p>بصفتك التيم ليدر وأخت قبل أي حاجة، حبيت أعتذر لك عن الشد اللي حصل وانفعالي بخصوص الشغل. أنا بقدر جداً دورك وتعبك في تنظيم التيم، والموقف اللي حصل كان نتيجة ضغط وتسرع مش أكتر.</p>
 
-																	حنان 
-<br>
-بأعتذر لك عن طريقتي في الكلام وقت مناقشة الشغل المرة اللي فاتت التعبير خاني والضغط خلاني أتكلم بأسلوب حاد ما يعكسش أبداً احترامي ليكي ولمجهودك إنتي زميلة غالية وتعبك في المشروع متقدر جداً 
-<br>
-								                           	             	بالنسبالي وحبيت أوضحلك ده عشان ميكونش في أي زعل بينا ونكمل شغلنا بروح كويسة
-<br>
-																	أحمد 
-<br>
-الرسالة دي عشان أصفي أي حاجة في النفوس أنا بعتذر لك عن كلامي اللي ضايقك المرة اللي فاتت إحنا إخوات وصحاب قبل المشروع وبعده وأكيد إنت عارف إن معزتك عندي أكبر من أي كلمة تتقال في وقت 
-<br>
-											عصبية أو انفعال حقك عليا يا صاحبي والموقف ده سوء تفاهم وإنشاء الله موقف ميتكررش 
-<br>
-       
- يا شباب حبيت أكتبلكم هنا عشان نقفل صفحة الموقف اللي حصل ده  أنا بعتذر للكل لو طريقتي في الكلام كانت حادة أو سببت أي طاقة سلبية فانت فاهمين ان  الضغط بيخلينا أحياناً نتعصب ونقول كلام ملوش داعي <br>
+            <span class="name">حنان</span>
+            <p>بأعتذر لك عن طريقتي في الكلام وقت مناقشة الشغل المرة اللي فاتت. التعبير خاني والضغط خلاني أتكلم بأسلوب حاد ما يعكسش أبداً احترامي ليكي ولمجهودك. إنتي زميلة غالية وتعبك في المشروع متقدر جداً بالنسبالي، وحبيت أوضحلك ده عشان ميكونش في أي زعل بينا ونكمل شغلنا بروح كويسة.</p>
 
-                                       بس الأهم إننا نفضل مقدرين مجهود بعض أنا بحترمكم كلكم وبحترم تعبنا في الشغل ده وياريت نعدي الموقف ده ونرجع نركز في شغلنا ومفيش اي حاجة تأثر على علاقتنا
-            </p>
-            <strong></strong>
+            <span class="name">أحمد</span>
+            <p>الرسالة دي عشان أصفي أي حاجة في النفوس. أنا بعتذر لك عن كلامي اللي ضايقك المرة اللي فاتت، إحنا إخوات وصحاب قبل المشروع وبعده، وأكيد إنت عارف إن معزتك عندي أكبر من أي كلمة تتقال في وقت عصبية أو انفعال حقك عليا يا صاحبي والموقف ده سوء تفاهم وإن شاء الله ميتكررش.</p>
+
+            <span class="name" style="color: #293751;">يا شباب</span>
+            <p>حبيت أكتبلكم هنا عشان نقفل صفحة الموقف ده. أنا بعتذر للكل لو طريقتي في الكلام كانت حادة أو سببت أي طاقة سلبية، فأنتم فاهمين إن الضغط بيخلينا أحياناً نتعصب ونقول كلام ملوش داعي. بس الأهم إننا نفضل مقدرين مجهود بعض، وياريت نعدي الموقف ده ونرجع نركز في شغلنا ومفيش أي حاجة تأثر على علاقتنا.</p>
           </div>
         </div>
       </div>
@@ -50,22 +216,24 @@
     </div>
   </div>
 
-  <div class="mu" style="display: none;">
-    <video id="myVideo" loop width="200px" height="200px">
-      <source src="lo.mp4"
-        type="video/mp4">
+  <div class="mu">
+    <video id="myVideo" loop width="200" height="200">
+      <source src="lo.mp4" type="video/mp4">
     </video>
   </div>
 
   <script>
-    const envelope = document.querySelector('.envelope-wrapper');
+    const envelopeWrapper = document.querySelector('.envelope-wrapper');
     const video = document.getElementById('myVideo');
 
-    envelope.addEventListener('click', () => {
-      envelope.classList.toggle('flap');
-      // تشغيل الفيديو عند فتح الظرف
-      if (envelope.classList.contains('flap')) {
-        video.play();
+    envelopeWrapper.addEventListener('click', () => {
+      envelopeWrapper.classList.toggle('flap');
+      
+      // تشغيل الفيديو بذكاء: الانتظار ثانية حتى تُفتح الورقة
+      if (envelopeWrapper.classList.contains('flap')) {
+        setTimeout(() => {
+            video.play();
+        }, 1000); 
       } else {
         video.pause();
         video.currentTime = 0; // إعادة الفيديو للبداية عند غلق الظرف
@@ -73,6 +241,4 @@
     });
   </script>
 </body>
-
 </html>
-
