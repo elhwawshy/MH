@@ -76,8 +76,9 @@
   .envelope>.letter>.text {
     font-family: math;
     color: var(--txt-color);
+    
     text-align: center;
-    font-size: 8px;
+    font-size: 5.2px;
   }
 
   .heart {
@@ -118,7 +119,7 @@
   }
 
   .flap>.envelope>.letter {
-    bottom: 100px;
+    bottom: 70%;
     transform: scale(1.5);
     transition-delay: 1s;
   }
